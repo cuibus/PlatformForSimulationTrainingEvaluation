@@ -8,7 +8,7 @@ public class Transition {
     public String name;
 //    public Transition(int delay, String fuzzyTable){
 //        this.delay = delay;
-//        // TODO parse table
+//        // TODO create a token processor which processes tokens according to fuzzyTable and call the other constructor
 //    }
 
     public Transition(int delay, TokenProcessor tokenProcessor){
