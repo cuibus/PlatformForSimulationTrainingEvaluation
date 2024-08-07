@@ -13,7 +13,7 @@ public class OETPN extends Thread {
     boolean[][] pre, post;
 
     // execution helper parameters
-    private boolean running;
+    public boolean running; //changed to public
     private Random random = new Random();
     public final int numberOfExecutionsBeforeRaisingInfiniteLoop = 20;
 
