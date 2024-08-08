@@ -28,9 +28,23 @@ public class OETPN extends Thread {
         this.transitions = transitions;
         for (int i=0;i<transitions.length;i++){
             transitions[i].name = i+"";
+            // just a safety check
+            if (transitions[i] instanceof OutputTransition){
+                for (int j=0;j<post[i].length;j++){
+                    if (post[i][j]) throw new RuntimeException("An output transition cannot have an output arc: transition " + i);
+                }
+            }
         }
 
         this.inExecution = new ArrayList<ExecutingTransition>();
+    }
+
+    public void addInputToken(int placeIndex, Token token){
+        //TODO: rewrite this to add placeName rather than placeIndex (must add place names with default values for all places)
+        for (int t=0;t<post.length;t++){
+            if (post[t][placeIndex]) throw new RuntimeException("Cannot add token in place " + placeIndex + " (because it is not an input place)");
+        }
+        this.marking[placeIndex] = token;
     }
 
     public void step(EventType event) {
@@ -43,7 +57,6 @@ public class OETPN extends Thread {
             }
             inExecution.removeIf(ie -> ie.delayRemaining <=0);
         }
-
 
         boolean executablesExist = true;
         int numberOfExecutions = 0; // just to test infinite loop
@@ -73,7 +86,9 @@ public class OETPN extends Thread {
         List<Token> output = transitions[transitionIndex].grdMapPairs.get("default").apply(extractedTokens);
 
         if (transitions[transitionIndex].delay == 0){
-            finalizeTransition(transitionIndex, output);
+            if (!(transitions[transitionIndex] instanceof OutputTransition)) {
+                finalizeTransition(transitionIndex, output);
+            }
         }
         else {
             inExecution.add(new ExecutingTransition(transitions[transitionIndex], output));
