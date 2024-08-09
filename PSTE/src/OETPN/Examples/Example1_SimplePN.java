@@ -3,7 +3,7 @@ package OETPN.Examples;
 import OETPN.*;
 import OETPN.PlaceTypes.*;
 
-public class Example1 {
+public class Example1_SimplePN {
     public static void main(String[] args) {
         // oetpn: (P1)->|->(P2)->|->(P3)
         // with delays

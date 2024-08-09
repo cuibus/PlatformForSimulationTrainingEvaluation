@@ -9,7 +9,7 @@ import OETPN.OutputTransition;
 
 import java.util.List;
 
-public class Example4 {
+public class Example4_IOports {
     public static void main(String[] args) {
         // oetpn: (P1,P2)->|->(P3)->|->(P4)->|, P2 is an input place, t4 is an output transition
         // with delays

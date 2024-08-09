@@ -12,7 +12,7 @@ import core.TableParser;
 
 import java.util.List;
 
-public class Example3 {
+public class Example3_SimplePNwithProcessing {
     public static void main(String[] args) {
         // oetpn: (P1,P2)->|->(P3)->|->(P4)
         // with delays

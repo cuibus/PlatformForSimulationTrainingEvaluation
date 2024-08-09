@@ -5,7 +5,7 @@ import OETPN.PlaceTypes.Token;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OETPN extends Thread {
+public class OETPN extends Thread implements Token{
     // OETPN parameters
     Transition[] transitions;
     Class[] placeTypes;
@@ -16,6 +16,7 @@ public class OETPN extends Thread {
     private boolean running;
     private Random random = new Random();
     public final int numberOfExecutionsBeforeRaisingInfiniteLoop = 20;
+    public final int maxSimulationHorizon = 200;
 
     // simulation parameters
     private List<ExecutingTransition> inExecution;
@@ -52,7 +53,7 @@ public class OETPN extends Thread {
             for (int t=0;t<inExecution.size();t++){
                 inExecution.get(t).delayRemaining--;
                 if (inExecution.get(t).delayRemaining <= 0){
-                    finalizeTransition(indexOfTransition(inExecution.get(t).t), inExecution.get(t).output);
+                    finalizeTransition(indexOfTransition(inExecution.get(t).t), inExecution.get(t).input);
                 }
             }
             inExecution.removeIf(ie -> ie.delayRemaining <=0);
@@ -83,19 +84,18 @@ public class OETPN extends Thread {
                 marking[p] = null;
             }
         }
-        List<Token> output = transitions[transitionIndex].grdMapPairs.get("default").apply(extractedTokens);
-
         if (transitions[transitionIndex].delay == 0){
             if (!(transitions[transitionIndex] instanceof OutputTransition)) {
-                finalizeTransition(transitionIndex, output);
+                finalizeTransition(transitionIndex, extractedTokens);
             }
         }
         else {
-            inExecution.add(new ExecutingTransition(transitions[transitionIndex], output));
+            inExecution.add(new ExecutingTransition(transitions[transitionIndex], extractedTokens));
         }
     }
 
-    private void finalizeTransition(int transitionIndex, List<Token> output){
+    private void finalizeTransition(int transitionIndex, List<Token> input){
+        List<Token> output = transitions[transitionIndex].grdMapPairs.get("default").apply(input);
         int writtenTokens=0;
         for (int p = 0; p < marking.length; p++) {
             if (post[transitionIndex][p]) {
@@ -135,7 +135,8 @@ public class OETPN extends Thread {
 
     public void run(){
         running = true;
-        while (running){
+        int nrSteps = 0;
+        while (running && nrSteps < maxSimulationHorizon){
             step(EventType.tic);
             try {
                 Thread.sleep(1000);
@@ -148,27 +149,27 @@ public class OETPN extends Thread {
     }
 
     public String toString(){
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("{");
         sb.append("PlaceTypes: " + Arrays.stream(placeTypes).map(Object::toString).collect(Collectors.joining(" ")) + "\n");
         sb.append("Transitions: " + Arrays.stream(transitions).map(Object::toString).collect(Collectors.joining(" ")) + "\n");
         sb.append("Marking: " + Arrays.stream(marking).map((m) -> {return m==null ? "null":m.toString();}).collect(Collectors.joining(" ")) + "\n");
         sb.append("InExecution: " + inExecution.stream().map((ie) -> { return toStringExecution(ie); }).collect(Collectors.joining(" ")) + "\n");
-        return sb.toString();
+        return sb.append("}").toString();
     }
 
     public String toStringExecution(ExecutingTransition inExecution){
-        return "T" + this.indexOfTransition(inExecution.t) + ":" + inExecution.delayRemaining +
-                inExecution.output.stream().map(Token::toString).collect(Collectors.joining(" "));
+        return "T" + this.indexOfTransition(inExecution.t) + ":" + inExecution.delayRemaining + "(" +
+                inExecution.input.stream().map(Token::toString).collect(Collectors.joining(" ")) + ")";
     }
 }
 
 class ExecutingTransition {
     public Transition t;
     public int delayRemaining;
-    public List<Token> output;
-    public ExecutingTransition(Transition t, List<Token> output){
+    public List<Token> input;
+    public ExecutingTransition(Transition t, List<Token> input){
         this.t = t;
         this.delayRemaining = t.delay;
-        this.output = output;
+        this.input = input;
     }
 }

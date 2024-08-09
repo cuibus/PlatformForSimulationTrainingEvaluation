@@ -6,10 +6,9 @@ import OETPN.PlaceTypes.FuzzyToken;
 import OETPN.PlaceTypes.Token;
 import OETPN.Transition;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class Example2 {
+public class Example2_ParallelTransitions {
     public static void main(String[] args) {
         // oetpn: (P1)->|->(P2,P3)->|->(P5)
         //              |->(P4)->|(P6)
