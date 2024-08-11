@@ -11,12 +11,22 @@ public class Transition {
 //        // TODO create a token processor which processes tokens according to fuzzyTable and call the other constructor
 //    }
 
-    public Transition(int delay, TokenProcessor tokenProcessor){
+    public Transition(String name, int delay, TokenProcessor tokenProcessor){
+        this.name = name;
         this.delay = delay;
         this.grdMapPairs.put("default", tokenProcessor);
     }
 
+    public Transition(int delay, TokenProcessor tokenProcessor) {
+        this(null, delay, tokenProcessor);
+    }
+
+
     public String toString(){
-        return "T" + name + ":" + this.delay;
+        return (name != null ? name : "T") + ":" + this.delay;
+    }
+
+    public String getNameOrIndex(int index){
+        return name != null ? name : "T_"+index;
     }
 }

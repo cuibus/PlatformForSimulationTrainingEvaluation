@@ -1,4 +1,4 @@
-package OETPN.Examples;
+package OETPN.Examples.OETPN;
 
 import OETPN.EventType;
 import OETPN.OETPN;
@@ -19,12 +19,7 @@ public class Example3_SimplePNwithProcessing {
         // initial marking: P1
         // some processing, T0 is an adder, T1 is an inverter
 
-        Class[] placeTypes = {
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class
-        };
+        String[] placeNames = { "P1", "P2", "P3", "P4" };
         Token[] initialMarking = {
                 FuzzyToken.NL,
                 FuzzyToken.PM,
@@ -59,7 +54,7 @@ public class Example3_SimplePNwithProcessing {
                 })
         };
 
-        OETPN oetpn = new OETPN(placeTypes, initialMarking, pre, post, transitions);
+        OETPN oetpn = new OETPN(placeNames, initialMarking, pre, post, transitions);
         System.out.println("INITIAL");
         System.out.println(oetpn.toString());
 

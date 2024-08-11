@@ -1,4 +1,4 @@
-package OETPN.Examples;
+package OETPN.Examples.OETPN;
 
 import OETPN.*;
 import OETPN.PlaceTypes.*;
@@ -19,7 +19,7 @@ public class Example5_ActiveTokens {
                     ((NumberToken) tokens.get(0)).nr + 1));
         };
         OETPN childOetpn = new OETPN(
-                new Class[]{Number.class, Number.class, Number.class},
+                new String[] { "P1", "P2", "P3" },
                 new Token[]{new NumberToken(1), null, null},
                 new boolean[][]{{true, false}, {false, true}, {false, false}},
                 new boolean[][]{{false, true, false}, {false, false, true}},
@@ -27,7 +27,7 @@ public class Example5_ActiveTokens {
         );
 
         OETPN parentOetpn = new OETPN(
-                new Class[]{OETPN.class, Number.class, Number.class},
+                new String[] { "P4", "P5" },
                 new Token[]{childOetpn, null, null},
                 new boolean[][]{{true, false}, {false, true}, {false, false}},
                 new boolean[][]{{false, true, false}, {false, false, true}},

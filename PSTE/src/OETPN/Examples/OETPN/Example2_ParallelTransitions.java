@@ -1,4 +1,4 @@
-package OETPN.Examples;
+package OETPN.Examples.OETPN;
 
 import OETPN.EventType;
 import OETPN.OETPN;
@@ -16,14 +16,7 @@ public class Example2_ParallelTransitions {
         // initial marking: P1
         // no processing, just copying tokens
 
-        Class[] placeTypes = {
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class
-        };
+        String[] placeNames = { "P1", "P2", "P3", "P4", "P5", "P6" };
         Token[] initialMarking = {
                 FuzzyToken.randomToken(),
                 null,
@@ -51,7 +44,7 @@ public class Example2_ParallelTransitions {
                 new Transition(2, tokens -> { return tokens; })
         };
 
-        OETPN oetpn = new OETPN(placeTypes, initialMarking, pre, post, transitions);
+        OETPN oetpn = new OETPN(placeNames, initialMarking, pre, post, transitions);
         System.out.println("INITIAL");
         System.out.println(oetpn.toString());
 

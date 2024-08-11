@@ -1,4 +1,4 @@
-package OETPN.Examples;
+package OETPN.Examples.OETPN;
 
 import OETPN.EventType;
 import OETPN.OETPN;
@@ -16,12 +16,7 @@ public class Example4_IOports {
         // initial marking: P1
         // no processing
 
-        Class[] placeTypes = {
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class,
-                FuzzyToken.class
-        };
+        String[] placeNames = { "P1", "P2", "P3", "P4"};
         Token[] initialMarking = {
                 FuzzyToken.randomToken(),
                 null,
@@ -42,14 +37,14 @@ public class Example4_IOports {
         Transition[] transitions = {
                 new Transition(0, tokens -> {return List.of(tokens.get(1));}), //copy the input token
                 new Transition(3, tokens -> {return tokens;}),
-                new OutputTransition(tokens -> {System.out.println("Output transition was executed: token ejected: " + tokens.get(0).toString());}),
+                new OutputTransition("T2", tokens -> {System.out.println("Output transition was executed: token ejected: " + tokens.get(0).toString());}),
         };
 
-        OETPN oetpn = new OETPN(placeTypes, initialMarking, pre, post, transitions);
+        OETPN oetpn = new OETPN(placeNames, initialMarking, pre, post, transitions);
         new java.util.Timer().schedule(new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        oetpn.addInputToken(1, FuzzyToken.ZR);
+                        oetpn.addInputToken("P2", FuzzyToken.ZR);
                         oetpn.step(EventType.input);
                         System.out.println("Input added");
                         System.out.println(oetpn.toString());
