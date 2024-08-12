@@ -2,7 +2,7 @@ package OETPN;
 
 import OETPN.PlaceTypes.Token;
 
-public abstract class OETPNBlackBox extends Thread implements Token {
+public abstract class RunnableModel extends Thread implements Token {
     public final int maxSimulationHorizon = 200;
     protected boolean isRunning;
 

@@ -3,11 +3,10 @@ package OETPN;
 import OETPN.PlaceTypes.Token;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class OETPN extends OETPNBlackBox {
+public class OETPN extends RunnableModel {
     // OETPN parameters
     Transition[] transitions;
     String[] placeNames;

@@ -1,14 +1,9 @@
 package Component;
 
 import OETPN.*;
-import OETPN.PlaceTypes.FuzzyToken;
 import OETPN.PlaceTypes.Token;
-import core.Tree.Nodes.InputType;
 
-import javax.management.loading.PrivateMLet;
-import java.util.List;
-
-public class Component extends OETPNBlackBox {
+public class Component extends RunnableModel {
     Component plant;
     Component controller;
     OETPN oetpn;
@@ -40,20 +35,20 @@ public class Component extends OETPNBlackBox {
         );
     }
 
-    public Component(Component plant, Component controller) {
+    public Component(Token initialToken, Component plant, Component controller) {
         this.plant = plant;
         this.controller = controller;
         this.outputTransition = new OutputTransition("TX", tokens -> {
             System.out.println("output to out: " + tokens.get(0).toString());
         }); // print out the token for logging
-        this.oetpn = getSimpleCommunicatorOetpn();
+        this.oetpn = getSimpleCommunicatorOetpn(initialToken);
     }
 
-    private OETPN getSimpleCommunicatorOetpn() {
+    private OETPN getSimpleCommunicatorOetpn(Token initialToken) {
         String[] placeNames = {"P0", "P1", "P2"};
         Token[] initialMarking = {
                 null,
-                null,
+                initialToken,
                 null
         };
         boolean[][] pre = {

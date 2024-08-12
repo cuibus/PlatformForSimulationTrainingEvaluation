@@ -12,7 +12,7 @@ public class Example2_SimplePlantSimpleController {
         Component controller = Component.getSimpleComponent(tokens -> {
             System.out.println("Token out from controller: " + tokens.get(0).toString());
         });
-        Component component = new Component(plant, controller);
+        Component component = new Component(new NumberToken(5), plant, controller);
 
         System.out.println("INITIAL");
         System.out.println(component.toString());
