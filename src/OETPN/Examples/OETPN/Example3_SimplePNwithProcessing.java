@@ -17,7 +17,7 @@ public class Example3_SimplePNwithProcessing {
         // oetpn: (P1,P2)->|->(P3)->|->(P4)
         // with delays
         // initial marking: P1
-        // some processing, T0 is an adder, T1 is an inverter
+        // some processing, T1 is an adder, T2 is an inverter
 
         String[] placeNames = { "P1", "P2", "P3", "P4" };
         Token[] initialMarking = {
@@ -37,7 +37,7 @@ public class Example3_SimplePNwithProcessing {
                 {false, false, false, true}
         };
         Transition[] transitions = {
-                new Transition(1, tokens -> {
+                new Transition("T1", 1, tokens -> {
                     TwoXOneTable table = new TableParser().parseTwoXOneTable(FuzzyUtils.adder2x1);
                     core.FuzzyPetriLogic.FuzzyToken[] result = table.execute(new FuzzyToken[]{
                             (FuzzyToken) tokens.get(0),
@@ -45,7 +45,7 @@ public class Example3_SimplePNwithProcessing {
                     });
                     return List.of(new FuzzyToken(result[0]));
                 }),
-                new Transition(1, tokens -> {
+                new Transition("T2", 1, tokens -> {
                     OneXOneTable table = new TableParser().parseOneXOneTable(FuzzyUtils.inverter1x1);
                     core.FuzzyPetriLogic.FuzzyToken[] result = table.execute(new FuzzyToken[]{
                             (FuzzyToken) tokens.get(0),

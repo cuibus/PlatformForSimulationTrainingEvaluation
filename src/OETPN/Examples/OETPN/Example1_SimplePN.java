@@ -26,8 +26,8 @@ public class Example1_SimplePN {
                 {false, false, true}
         };
         Transition[] transitions = {
-                new Transition(1, tokens -> { return tokens; }),
-                new Transition(2, tokens -> { return tokens; })
+                new Transition("T0", 1, tokens -> { return tokens; }),
+                new Transition("T1", 2, tokens -> { return tokens; })
         };
 
         OETPN oetpn = new OETPN(placeNames, initialMarking, pre, post, transitions);

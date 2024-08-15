@@ -39,9 +39,9 @@ public class Example2_ParallelTransitions {
                 {false, false, false, false, false,  true},
         };
         Transition[] transitions = {
-                new Transition(1, tokens -> { return List.of(tokens.get(0), tokens.get(0), tokens.get(0)); }), // gets 1 token, returns 3
-                new Transition(1, tokens -> { return List.of(tokens.get(0)); }), // gets 2 tokens, returns 1
-                new Transition(2, tokens -> { return tokens; })
+                new Transition("T1", 1, tokens -> { return List.of(tokens.get(0), tokens.get(0), tokens.get(0)); }), // gets 1 token, returns 3
+                new Transition("T2", 1, tokens -> { return List.of(tokens.get(0)); }), // gets 2 tokens, returns 1
+                new Transition("T3" , 2, tokens -> { return tokens; })
         };
 
         OETPN oetpn = new OETPN(placeNames, initialMarking, pre, post, transitions);

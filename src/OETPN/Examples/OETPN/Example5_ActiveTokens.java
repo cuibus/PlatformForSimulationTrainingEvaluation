@@ -23,7 +23,7 @@ public class Example5_ActiveTokens {
                 new Token[]{new NumberToken(1), null, null},
                 new boolean[][]{{true, false}, {false, true}, {false, false}},
                 new boolean[][]{{false, true, false}, {false, false, true}},
-                new Transition[]{new Transition(1, childTp), new Transition(1, childTp)}
+                new Transition[]{new Transition("T2", 1, childTp), new Transition("T3", 1, childTp)}
         );
 
         OETPN parentOetpn = new OETPN(
@@ -32,11 +32,11 @@ public class Example5_ActiveTokens {
                 new boolean[][]{{true, false}, {false, true}, {false, false}},
                 new boolean[][]{{false, true, false}, {false, false, true}},
                 new Transition[]{
-                        new Transition(2, tokens -> {
+                        new Transition("T0", 2, tokens -> {
                             ((OETPN) tokens.get(0)).start();
                             return List.of(new NumberToken(0));
                         }),
-                        new Transition(2, tokens -> {
+                        new Transition("T1", 2, tokens -> {
                             return tokens;
                         })}
         );

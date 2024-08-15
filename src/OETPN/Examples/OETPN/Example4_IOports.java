@@ -35,8 +35,8 @@ public class Example4_IOports {
                 {false, false, false, false}
         };
         Transition[] transitions = {
-                new Transition(0, tokens -> {return List.of(tokens.get(1));}), //copy the input token
-                new Transition(3, tokens -> {return tokens;}),
+                new Transition("T0", 0, tokens -> {return List.of(tokens.get(1));}), //copy the input token
+                new Transition("T1", 3, tokens -> {return tokens;}),
                 new OutputTransition("T2", tokens -> {System.out.println("Output transition was executed: token ejected: " + tokens.get(0).toString());}),
         };
 

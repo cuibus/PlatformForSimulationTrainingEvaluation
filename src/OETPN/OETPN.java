@@ -63,7 +63,7 @@ public class OETPN extends RunnableModel {
         boolean somethingWasExecuted;
         int numberOfExecutions = 0; // just to test infinite loop
         do {
-            List<Integer> executables = getExecutableTransitionsIndexes();
+            List<Integer> executables = getExecutableTransitionsIndexes(numberOfExecutions > 0);
             if (somethingWasExecuted = executables.size() > 0) {
                 int toExecute = executables.get(random.nextInt(executables.size()));
                 startTransition(toExecute);
@@ -136,6 +136,8 @@ public class OETPN extends RunnableModel {
             int writtenTokens = 0;
             for (int p = 0; p < marking.length; p++) {
                 if (post[transitionIndex][p]) {
+                    if (output.size() < writtenTokens - 1)
+                        throw new RuntimeException("The output from " + transitions[transitionIndex] + " should have " + writtenTokens + " tokens");
                     marking[p] = output.get(writtenTokens);
                     writtenTokens++;
                 }
@@ -143,10 +145,10 @@ public class OETPN extends RunnableModel {
         }
     }
 
-    private List<Integer> getExecutableTransitionsIndexes() {
+    private List<Integer> getExecutableTransitionsIndexes(boolean onlyAsync) {
         List<Integer> result = new ArrayList<Integer>();
         for (int t = 0; t < transitions.length; t++) {
-            if (isExecutable(t)) {
+            if ((transitions[t].isAsync || !onlyAsync) && isExecutable(t)) {
                 result.add(t);
             }
         }
