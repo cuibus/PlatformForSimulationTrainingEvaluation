@@ -9,7 +9,7 @@ This package contains all the classes related to OETPN and their execution.
 - `RunnableModel` represents an abstract runnable model: the `step` method is all you need in order to get started. This should perform one simulation step for your model, be it synchronous (EventType.tic) or asynchronous(EventType.input). For the asynchronous event, the `step` method should be used together with `addInputToken`.
 - `OETPN` represents a runnable OETPN model with places and transitions. 
   - Transitions can be defined using their name, delay and a `TokenProcessor` (a function which describes how the transition output is generated from the input tokens).
-  - OutputTransitions must have delay 0 and only consume tokens. The transition action defines how and where the tokens are inserted.
+  - OutputTransitions must have delay 0 and can only consume one token. The transition action defines how and where the token is inserted. After creation of outputTransition, a new action can be added (in case you want to connect the component to another component at a later stage).
 - The Token can be of type
   - `FuzzyToken`, with values NL, NM, ZR, PM, PL and everything in between
   - `NumberToken` with one floating-point value
@@ -17,10 +17,12 @@ This package contains all the classes related to OETPN and their execution.
 
 In the `Examples` folder you can find some working examples
 ### `Component`
-This package contains the standard unit displayed below. It has as input port a place (named "P0") and as output port a transition. The component contains 3 blocks: OETPN, controller, plant.
-Controller and plant can also be a component.
+This package contains the standard unit displayed below. It has as input port a place (named "Pin") and as output port a transition. The component contains 3 blocks: OETPN, controller, plant.
+Controller and plant can also be a component, or null.
 
-For now,the OETPN has a basic structure: input port is connected to the output port, a default token is being passed to the plant, then the plant output is passed to the controller, etc.
+There are several ways to create the component:
+- with basic OETPN: input port is connected to the output port, plant and controller are null.
+- with OETPN as communicator: the input token from Pin is passed to the controller, the output from the controller is passed to the plant, the ouput of the plant is passed as input to the controller (together with the token from Pin). The plant output is also ejected with the output transition.
 
 ![component.png](docs%2Fcomponent.png)
 

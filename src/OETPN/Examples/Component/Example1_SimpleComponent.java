@@ -2,19 +2,15 @@ package OETPN.Examples.Component;
 
 import Component.Component;
 import OETPN.EventType;
-import OETPN.OETPN;
-import OETPN.OutputTransition;
-import OETPN.PlaceTypes.FuzzyToken;
 import OETPN.PlaceTypes.NumberToken;
-import OETPN.PlaceTypes.Token;
-import OETPN.Transition;
-
-import java.util.List;
 
 public class Example1_SimpleComponent {
+    // creates the simplest component, which only takes the input and passes it to the output
+
     public static void main(String[] args) {
-        Component plant = Component.getSimpleComponent(tokens -> {
-            System.out.println("Token out from plant: " + tokens.get(0).toString());
+
+        Component plant = Component.getSimplestComponent("plant", token -> {
+            System.out.println("Token out from plant: " + token.toString());
         });
 
         System.out.println("INITIAL");

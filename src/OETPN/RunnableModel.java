@@ -6,7 +6,7 @@ public abstract class RunnableModel extends Thread implements Token {
     public final int maxSimulationHorizon = 200;
     protected boolean isRunning;
 
-    public abstract StepResult step(EventType event);
+    public abstract void step(EventType event);
 
     public void run(){
         isRunning = true;

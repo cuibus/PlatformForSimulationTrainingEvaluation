@@ -18,7 +18,7 @@ public class OETPN extends RunnableModel {
 
     // execution helper parameters
     private Random random = new Random();
-    public final int numberOfExecutionsBeforeRaisingInfiniteLoop = 20;
+    public static final int numberOfExecutionsBeforeRaisingInfiniteLoop = 20;
 
     public OETPN(String[] placeNames, Token[] initialMarking, boolean[][] pre, boolean[][] post, Transition[] transitions) {
         this.placeNames = placeNames;
@@ -36,10 +36,11 @@ public class OETPN extends RunnableModel {
         // some validations
         int placeIndex = Arrays.asList(placeNames).indexOf(inputPlaceName);
         if (placeIndex < 0) throw new RuntimeException("Input place name " + inputPlaceName + " was not found.");
-        for (int t = 0; t < post.length; t++) {
-            if (post[t][placeIndex])
-                throw new RuntimeException("Cannot add token in place " + placeIndex + " (because it is not an input place)");
-        }
+//        TODO: can an input place take tokens from inside a component ?
+//        for (int t = 0; t < post.length; t++) {
+//            if (post[t][placeIndex])
+//                throw new RuntimeException("Cannot add token in place " + placeIndex + " (because it is not an input place)");
+//        }
 
         this.marking[placeIndex] = token;
         if (this.isRunning) {
@@ -47,14 +48,12 @@ public class OETPN extends RunnableModel {
         }
     }
 
-    public StepResult step(EventType event) {
-        StepResult result = new StepResult();
+    public void step(EventType event) {
         if (event == EventType.tic) {
             for (int t = 0; t < inExecution.size(); t++) {
                 inExecution.get(t).delayRemaining--;
                 if (inExecution.get(t).delayRemaining <= 0) {
                     finalizeTransition(indexOfTransition(inExecution.get(t).t), inExecution.get(t).input);
-                    result.somethingWasExecuted = true;
                 }
             }
             inExecution.removeIf(ie -> ie.delayRemaining <= 0);
@@ -67,7 +66,6 @@ public class OETPN extends RunnableModel {
             if (somethingWasExecuted = executables.size() > 0) {
                 int toExecute = executables.get(random.nextInt(executables.size()));
                 startTransition(toExecute);
-                result.somethingWasExecuted = true;
                 numberOfExecutions++;
             }
             if (numberOfExecutions >= numberOfExecutionsBeforeRaisingInfiniteLoop) {
@@ -75,19 +73,23 @@ public class OETPN extends RunnableModel {
             }
         }
         while (somethingWasExecuted);
-        return result;
     }
 
 
     private void validateOETPN() {
+        // check dimensions consistency
+        if ((post.length != pre[0].length) || (pre.length != post[0].length)) {
+            throw new RuntimeException("Inconsistent dimensions of pre and post matrices");
+        }
+        if (transitions.length != post.length) { throw new RuntimeException("Number of transitions is inconsistent with pre and post dimensions.");}
+        if (marking.length != pre.length) { throw new RuntimeException("Marking dimension is inconsistent with pre and post dimensions.");}
+
         Predicate<String[]> hasNonNullDuplicates = arr ->
                 Arrays.stream(arr).filter(Objects::nonNull).distinct().count() !=
                         Arrays.stream(arr).filter(Objects::nonNull).count();
-
         if (hasNonNullDuplicates.test(this.placeNames)) {
             throw new RuntimeException("Duplicate place name found");
         }
-
         if (hasNonNullDuplicates.test(Arrays.stream(this.transitions).map(t -> t.name).toArray(String[]::new))) {
             throw new RuntimeException("Duplicate transition name found");
         }
@@ -131,7 +133,7 @@ public class OETPN extends RunnableModel {
     }
 
     private void finalizeTransition(int transitionIndex, List<Token> input) {
-        List<Token> output = transitions[transitionIndex].grdMapPairs.get("default").apply(input);
+        List<Token> output = transitions[transitionIndex].tokenProcessor.apply(input);
         if (!(transitions[transitionIndex] instanceof OutputTransition)) {
             int writtenTokens = 0;
             for (int p = 0; p < marking.length; p++) {
@@ -143,6 +145,7 @@ public class OETPN extends RunnableModel {
                 }
             }
         }
+        transitions[transitionIndex].additionalActions.forEach(action -> action.run());
     }
 
     private List<Integer> getExecutableTransitionsIndexes(boolean onlyAsync) {
@@ -171,6 +174,11 @@ public class OETPN extends RunnableModel {
             }
         }
         throw new RuntimeException("Transition " + t + " was not found");
+    }
+
+    public Transition getTransitionByName(String name){
+        Transition tr = Arrays.stream(transitions).filter(t -> name.equals(t.name)).findFirst().orElse(null);
+        return (tr instanceof OutputTransition) ? tr : null;
     }
 
     public String toString() {

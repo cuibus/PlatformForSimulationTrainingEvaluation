@@ -18,8 +18,8 @@ public class Example6_EquationInOETPN {
     final static double a = -0.3;
     final static double b = 0.2;
     public static void main(String[] args) {
-        OutputTransition tout = new OutputTransition("Tout", (tokens) -> {
-            System.out.println("output from transition: " + tokens.get(0).toString());
+        OutputTransition tout = new OutputTransition("Tout", (token) -> {
+            System.out.println("output from transition: " + token.toString());
         });
 
         String[] placeNames = { "Pu", "Px", "Px+1", "P3"};

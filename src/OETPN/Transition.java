@@ -1,23 +1,22 @@
 package OETPN;
 
-import java.util.HashMap;
+import java.util.Stack;
 
 public class Transition {
     public int delay = 0;
     public boolean isAsync = true;
 
-    HashMap<String, TokenProcessor> grdMapPairs = new HashMap<>();
+    TokenProcessor tokenProcessor;
+    Stack<Runnable> additionalActions;
+
     public String name;
-//    public Transition(int delay, String fuzzyTable){
-//        this.delay = delay;
-//        // TODO create a token processor which processes tokens according to fuzzyTable and call the other constructor
-//    }
 
     public Transition(String name, int delay, TokenProcessor tokenProcessor, boolean isAsync){
         this.name = name;
         this.delay = delay;
         this.isAsync = isAsync;
-        this.grdMapPairs.put("default", tokenProcessor);
+        this.tokenProcessor = tokenProcessor;
+        this.additionalActions = new Stack<>();
     }
 
     public Transition(String name, int delay, TokenProcessor tokenProcessor){
@@ -39,5 +38,13 @@ public class Transition {
 
     public String getNameOrIndex(int index){
         return name != null ? name : "T_"+index;
+    }
+
+    public void addActionForTransition(Runnable action){
+        this.additionalActions.push(action);
+    }
+
+    public Runnable popActionForTransition(){
+        return this.additionalActions.pop();
     }
 }

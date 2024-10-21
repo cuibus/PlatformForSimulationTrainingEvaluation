@@ -37,7 +37,7 @@ public class Example4_IOports {
         Transition[] transitions = {
                 new Transition("T0", 0, tokens -> {return List.of(tokens.get(1));}), //copy the input token
                 new Transition("T1", 3, tokens -> {return tokens;}),
-                new OutputTransition("T2", tokens -> {System.out.println("Output transition was executed: token ejected: " + tokens.get(0).toString());}),
+                new OutputTransition("T2", token -> {System.out.println("Output transition was executed: token ejected: " + token.toString());}),
         };
 
         OETPN oetpn = new OETPN(placeNames, initialMarking, pre, post, transitions);
